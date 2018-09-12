@@ -7,21 +7,43 @@
 #include<cstdio>
 #include<stdio.h>
 #include<stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 using namespace std;
 
+bool is_modole_exist(string modole_name){   // Chack if modole_name exist in /usr/bin
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir ("/usr/bin")) != NULL) {
+      while ((ent = readdir (dir)) != NULL) {
+        if (modole_name ==  string(ent->d_name)){
+            return true;
+        }
+      }
+      closedir (dir);
+    }
+    return false;
+}
+
 int main(int argc, char* argv[])
 {
+  if (!is_modole_exist("gawk")){    // If gawk not installd exit program
+    cout << "gawk is missing" << endl;
+    cout << "sudo apt install gawk" << endl;
+    return 1;
+  }
+  
   stringstream value; //used to store the output of the gawk program
 
   int num1; //the first number produced by the gawk program, sum of column 1
   int num2; //the second number produced by the gawk program, sum of column 2
 
-  cout << "gawk at: home/012/e/ej/ejr140230/HW3/bin/gawk" << endl;
-  cout << "Shellcmd1: /home/012/e/ej/ejr140230/HW3/bin/gawk --version" << endl;
-  cout << "Shellcmd2: /home/012/e/ej/ejr140230/HW3/bin/gawk -f gawk.code numbers.txt" << "\n\n";
+  cout << "gawk at: /usr/bin/gawk" << endl;
+  cout << "Shellcmd1: /usr/bin/gawk --version" << endl;
+  cout << "Shellcmd2: /usr/bin/gawk -f gawk.code numbers.txt" << "\n\n";
 
-  FILE *fp = popen("/home/012/e/ej/ejr140230/HW3/bin/gawk --version", "r"); //popen returns pointer to an open stream that can be read or wrote to based on the second parameter, the first
+  FILE *fp = popen("/usr/bin/gawk --version", "r"); //popen returns pointer to an open stream that can be read or wrote to based on the second parameter, the first
                                                                             //is a string that is executed on the command line
   char buff[BUFSIZ]; //buffer for our stream(fp) used when reading from stream
 
@@ -35,7 +57,7 @@ int main(int argc, char* argv[])
   value.str(""); //set string in stringstream to an empty string
   value.clear(); //clear other data ossociated with the stream
 
-  fp = popen("/home/012/e/ej/ejr140230/HW3/bin/gawk -f gawk.code numbers.txt", "r"); //run second command(our gawk program) on the command line and store the output
+  fp = popen("/usr/bin/gawk -f gawk.code numbers.txt", "r"); //run second command(our gawk program) on the command line and store the output
   while((fgets(buff, BUFSIZ, fp)) != NULL) //loop and get all of the lines from the output of our popen(command in shell) save in buff
 
   {
