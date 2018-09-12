@@ -1,0 +1,6 @@
+#name:Eric Rogers
+#email:ejr140230@utdallas.edu
+#course number:CS3376.001
+BEGIN {a=0;b=0}
+{a=$1+a; b=$4+b}
+END {print a " " b}
